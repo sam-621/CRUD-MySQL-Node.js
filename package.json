@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon ./src/App.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rogeliosamuel621/CRUD-MySQL-Node.js.git"
+    "url": "git+https://github.com/rogeliosamuel621/CRUD-MySQL-Node.js"
   },
   "keywords": [],
   "author": "",
