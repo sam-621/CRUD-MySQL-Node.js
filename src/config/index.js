@@ -8,4 +8,5 @@ const config = {
     db_name: process.env. DB_NAME
 }
 
+
 module.exports = config

@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const { db_user, db_password, db_host, db_name } = require('../config');
+const { db_user, db_password, db_host, db_name } = require('../../config');
 const pool = mysql.createPool({
     user: db_user,
     password: db_password,
