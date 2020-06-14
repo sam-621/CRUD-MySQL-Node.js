@@ -4,12 +4,17 @@ const { secret } = require('../config/index');
 const authJWT = {
     sign(payload, callback) {
 
-        jwt.sign({payload}, secret, null, (err, token) => {
+        jwt.sign(payload, secret, null, (err, token) => {
             if(err) {
-                return console.log(err);
+                console.log(err);
+                return
             }
             callback(token);
         });
+    },
+
+    verify() {
+        
     }
 }
 

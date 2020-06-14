@@ -2,8 +2,9 @@ const express = require('express');
 const bcryptjs = require('bcryptjs');
 const router = express.Router();
 const userService = require('../services/users');
+const saveRoutes = require('../utils/middlewares/saveRoutes')
 
-router.get('/', (req, res) => {
+router.get('/profile/getUsers', (req, res) => {
     userService.GetUsers((users) => {
         res.status(200).json({
             data: users,
@@ -12,7 +13,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:userId', (req, res) => {
+router.get('/profile/getUsers/:userId', (req, res) => {
     const { userId } = req.params;
 
     userService.GetUser(userId, (user) => {
@@ -23,7 +24,7 @@ router.get('/:userId', (req, res) => {
     });
 });
 
-router.post('/', async (req, res) => {
+router.post('/profile/create', async (req, res) => {
     const { name, lastName, username, email, tel, password } = req.body;
     const hasedPassword = await bcryptjs.hash(password, 10);
     const newUser = {
@@ -43,7 +44,7 @@ router.post('/', async (req, res) => {
     });
 });
 
-router.put('/:userId', (req, res) => {
+router.put('profile/getUser/update/:userId', (req, res) => {
     const { userId } = req.params;
     const user = req.body;
 
@@ -55,7 +56,7 @@ router.put('/:userId', (req, res) => {
     });
 });
 
-router.delete('/:userId', (req, res) => {
+router.delete('profile/getUsers/delete/:userId', (req, res) => {
     const { userId } = req.params;
 
     userService.DeleteUser(userId, (userDeleted) => {
@@ -71,10 +72,12 @@ router.post('/logIn', (req, res) => {
     const { username, password } = req.body;
 
     userService.LogIn(username, password, (token, message) => {
-        res.status(200).json({
-            token: token,
-            message:message
-        })
+        res.redirect('/profile');
     });
-})
+});
+
+router.get('/profile', saveRoutes, (req, res) => {
+    res.send(req.decoded)
+});
+
 module.exports = router;

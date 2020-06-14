@@ -1,6 +1,6 @@
 const bcryptjs = require('bcryptjs');
 const MySQL = require('../lib/MySQL');
-const auth = require('../auth/signJWT');
+const auth = require('../auth/authJWT');
 
 class UserServces {
     constructor() {
@@ -43,7 +43,7 @@ class UserServces {
         MySQL.Get(this.table, 'username', username, async (user) => {
             if(user.length) {
                 if(await bcryptjs.compare(password, user[0].password)) {
-                    auth.sign(user[0], (token)  => {
+                    auth.sign(user[0].username, (token)  => {
                         callback(token, 'succes');
                     });
                 } else {
