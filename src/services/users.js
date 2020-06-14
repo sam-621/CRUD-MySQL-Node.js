@@ -1,4 +1,5 @@
 const MySQL = require('../lib/MySQL');
+const auth = require('../auth/signJWT');
 
 class UserServces {
     constructor() {
@@ -33,6 +34,20 @@ class UserServces {
     DeleteUser(id, callback) {
         MySQL.Delete(this.table, this.condiion, id, (userDeleted) => {
             callback(userDeleted);
+        })
+    }
+
+    LogIn(username, password, callback) {
+        MySQL.Get(this.table, 'username', username, (user) => {
+            if(user.length) {
+                if(user[0].password === password) {
+                    auth({ user }, (token)  => {
+                        callback(token, 'succes');
+                    });
+                }
+            } else {
+                callback({}, 'failure');
+            }
         })
     }
 }

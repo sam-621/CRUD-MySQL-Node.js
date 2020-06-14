@@ -52,8 +52,19 @@ router.delete('/:userId', (req, res) => {
         res.status(200).json({
             data: userDeleted,
             message: 'you have deleted a user'
-        })
-    })
-})
+        });
+    });
+});
 
+
+router.post('/logIn', (req, res) => {
+    const { username, password } = req.body;
+
+    userService.LogIn(username, password, (token, message) => {
+        res.status(200).json({
+            token: token,
+            message:message
+        })
+    });
+})
 module.exports = router;
