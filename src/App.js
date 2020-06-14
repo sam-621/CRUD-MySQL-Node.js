@@ -9,4 +9,7 @@ app.use(express.json())
 const userRoutes = require('./routes/users');
 app.use('/', userRoutes);
 
-app.listen(port, (req, res) => console.log('server on http://localhost:3000'))
+
+app.listen(port, (req, res) => {
+    console.log('server on http://localhost:3000')
+})

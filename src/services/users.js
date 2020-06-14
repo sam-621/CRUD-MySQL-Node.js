@@ -1,3 +1,4 @@
+const bcryptjs = require('bcryptjs');
 const MySQL = require('../lib/MySQL');
 const auth = require('../auth/signJWT');
 
@@ -38,17 +39,20 @@ class UserServces {
     }
 
     LogIn(username, password, callback) {
-        MySQL.Get(this.table, 'username', username, (user) => {
+
+        MySQL.Get(this.table, 'username', username, async (user) => {
             if(user.length) {
-                if(user[0].password === password) {
-                    auth({ user }, (token)  => {
+                if(await bcryptjs.compare(password, user[0].password)) {
+                    auth.sign(user[0], (token)  => {
                         callback(token, 'succes');
                     });
+                } else {
+                    callback({}, 'contraseña invalida')
                 }
             } else {
-                callback({}, 'failure');
+                callback({}, 'no se encontró un usuario');
             }
-        })
+        });
     }
 }
 

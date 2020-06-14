@@ -1,4 +1,5 @@
 const express = require('express');
+const bcryptjs = require('bcryptjs');
 const router = express.Router();
 const userService = require('../services/users');
 
@@ -22,10 +23,19 @@ router.get('/:userId', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
-    const user = req.body;
+router.post('/', async (req, res) => {
+    const { name, lastName, username, email, tel, password } = req.body;
+    const hasedPassword = await bcryptjs.hash(password, 10);
+    const newUser = {
+        name,
+        lastName,
+        username,
+        email,
+        tel,
+        password: hasedPassword
+    }
     
-    userService.CreateUser(user, (userCreated) => {
+    userService.CreateUser(newUser, (userCreated) => {
         res.status(200).json({
             data: userCreated,
             message: 'you have created a user'
