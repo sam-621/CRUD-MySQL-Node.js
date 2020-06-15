@@ -50,6 +50,7 @@ class UserServces {
                     }
 
                     auth.sign(payload, (token)  => {
+                        console.log('en success')
                         callback(token, 'succes');
                     });
                 } else {

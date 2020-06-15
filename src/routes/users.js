@@ -92,6 +92,7 @@ router.post('/logIn', (req, res) => {
     const { username, password } = req.body;
 
     userService.LogIn(username, password, (token, message) => {
+
         if(message === 'contraseña invalida') {
             res.status(400).json({
                 error: true,
@@ -108,6 +109,7 @@ router.post('/logIn', (req, res) => {
             return
         }
         if(message === 'succes') {
+
             req.session.token = token;
             res.redirect('/profile');
         }
@@ -115,6 +117,7 @@ router.post('/logIn', (req, res) => {
 });
 
 router.get('/profile', saveRoutes, (req, res) => {
+
     res.send(req.decoded)
 });
 
