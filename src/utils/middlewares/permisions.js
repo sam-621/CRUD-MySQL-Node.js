@@ -5,11 +5,19 @@ permisions.use((req, res, next) => {
     const { rol } = req.decoded;
 
     if(rol === 'admin') {
-        if(req.route.path == '/profile/getUsers'){
+        if(req.route.path === '/profile/getUsers'){
             next();
         }
 
-        if(req.route.path == '/profile/create') {
+        if(req.route.path === '/profile/create') {
+            next();
+        }
+
+        if(req.route.path === '/profile/getUser/update/:userId') {
+            next();
+        }
+
+        if(req.route.path === '/profile/getUsers/delete/:userId') {
             next();
         }
 

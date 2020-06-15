@@ -5,11 +5,10 @@ const userService = require('../services/users');
 const saveRoutes = require('../utils/middlewares/saveRoutes');
 const permisions = require('../utils/middlewares/permisions')
 
-router.get('/profile/getUsers', saveRoutes , (req, res) => {
+router.get('/profile/getUsers', saveRoutes, permisions, (req, res) => {
     const {id} = req.decoded;
-    console.log(req.route.path)
 
-    userService.GetUser(id, (contacts) => {
+    userService.GetUser(id, 'person_id', (contacts) => {
         res.status(200).json({
             contacts: contacts
         });
@@ -19,7 +18,7 @@ router.get('/profile/getUsers', saveRoutes , (req, res) => {
 router.get('/profile/getUsers/:userId', (req, res) => {
     const { userId } = req.params;
 
-    userService.GetUser(userId, (user) => {
+    userService.GetUser(userId, 'id', (user) => {
         res.status(200).json({
             data: user,
             message: 'you have get just one user'
@@ -49,10 +48,23 @@ router.post('/registrer', async (req, res) => {
 });
 
 router.post('/profile/create', saveRoutes, permisions, (req, res) => {
-    console.log('en create');
+    const newUser = {
+        name: req.body.name,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        tel: req.body.tel,
+        person_id: req.decoded.id
+    }
+
+    userService.CreateUser(newUser, (userCreated) => {
+        res.status(200).json({
+            message: 'user created',
+            data: userCreated
+        });
+    })
 })
 
-router.put('profile/getUser/update/:userId', (req, res) => {
+router.put('/profile/getUser/update/:userId', saveRoutes, permisions, (req, res) => {
     const { userId } = req.params;
     const user = req.body;
 
@@ -64,7 +76,7 @@ router.put('profile/getUser/update/:userId', (req, res) => {
     });
 });
 
-router.delete('profile/getUsers/delete/:userId', (req, res) => {
+router.delete('/profile/getUsers/delete/:userId', saveRoutes, permisions, (req, res) => {
     const { userId } = req.params;
 
     userService.DeleteUser(userId, (userDeleted) => {

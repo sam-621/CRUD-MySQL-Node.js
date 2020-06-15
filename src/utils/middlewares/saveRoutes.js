@@ -8,7 +8,6 @@ saveRoutes.use((req, res, next) => {
 
     if(session) {
         const token = session.token
-        console.log(token)
         jwt.verify(token, secret, (err, decoded) => {
             if(err) {
                 console.log(err);

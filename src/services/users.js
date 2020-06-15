@@ -8,8 +8,8 @@ class UserServces {
         this.condiion = 'id';
     }
 
-    GetUser(person_id, callback) {
-        MySQL.Get('contacts', 'person_id', person_id, (contacts) => {
+    GetUser(person_id, condition, callback) {
+        MySQL.Get('contacts', condition, person_id, (contacts) => {
             callback(contacts);
         });
     }
@@ -21,19 +21,19 @@ class UserServces {
     }
 
     CreateUser(data, callback) {
-        MySQL.Create(this.table, data, (userCreated) => {
+        MySQL.Create('contacts', data, (userCreated) => {
             callback(userCreated);
         });
     }
 
     UpdateUser(id, data, callback) {
-        MySQL.Update(this.table, this.condiion, data, id, (userUpdated) => {
+        MySQL.Update('contacts', this.condiion, data, id, (userUpdated) => {
             callback(userUpdated)
         });
     }
 
     DeleteUser(id, callback) {
-        MySQL.Delete(this.table, this.condiion, id, (userDeleted) => {
+        MySQL.Delete('contacts', this.condiion, id, (userDeleted) => {
             callback(userDeleted);
         })
     }
