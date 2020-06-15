@@ -3,7 +3,11 @@ const bcryptjs = require('bcryptjs');
 const router = express.Router();
 const userService = require('../services/users');
 const saveRoutes = require('../utils/middlewares/saveRoutes');
-const permisions = require('../utils/middlewares/permisions')
+const permisions = require('../utils/middlewares/permisions');
+
+router.get('/', (req, res) => {
+    res.send('Main')
+});
 
 router.get('/profile/getUsers', saveRoutes, permisions, (req, res) => {
     const {id} = req.decoded;

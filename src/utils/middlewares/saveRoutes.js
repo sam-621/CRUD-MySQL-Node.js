@@ -3,17 +3,16 @@ const express = require('express');
 const saveRoutes = express.Router();
 
 saveRoutes.use((req, res, next) => {
-    const session = req.session;
+    const token = req.session.token;
 
-    if(session) {
-        const token = session.token;
+    if(token) {
 
         auth.decoded(token, (decoded) => {
             req.decoded = decoded;
             next()
         })
     } else {
-        res.send('no hay token');
+        res.redirect('/')
     }
 });
 

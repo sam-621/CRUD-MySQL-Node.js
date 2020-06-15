@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const session = require('express-session');
 const { port, sessionSecret } = require('./config');
 
@@ -11,8 +12,16 @@ app.use(session({
     saveUninitialized: false,
 }));
 
+app.use(helmet(helmet.contentSecurityPolicy({
+    directives: {
+        "default-src": ["'self"],
+        styleSrc: ["'self'", 'maxcdn.bootstrapcdn.com']
+    }
+})));
+
 // ROUTES
 const userRoutes = require('./routes/users');
+const { options } = require('./routes/users');
 app.use('/', userRoutes);
 
 
