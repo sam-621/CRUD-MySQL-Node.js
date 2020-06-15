@@ -1,9 +1,15 @@
 const express = require('express');
-const { port } = require('./config');
+const session = require('express-session');
+const { port, sessionSecret } = require('./config');
 
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
+app.use(session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+}));
 
 // ROUTES
 const userRoutes = require('./routes/users');

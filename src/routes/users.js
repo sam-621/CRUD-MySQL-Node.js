@@ -72,11 +72,13 @@ router.post('/logIn', (req, res) => {
     const { username, password } = req.body;
 
     userService.LogIn(username, password, (token, message) => {
+        req.session.token = token;
         res.redirect('/profile');
     });
 });
 
 router.get('/profile', saveRoutes, (req, res) => {
+    console.log(req.session.token)
     res.send(req.decoded)
 });
 

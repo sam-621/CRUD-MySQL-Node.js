@@ -4,9 +4,10 @@ const saveRoutes = express.Router();
 const { secret } = require('../../config/');
 
 saveRoutes.use((req, res, next) => {
-    const token = req.headers['access-token'];
+    const session = req.session;
 
-    if(token) {
+    if(session) {
+        const token = session.token.replace('Bearer', '');
         jwt.verify(token, secret, (err, decoded) => {
             if(err) {
                 console.log(err);
