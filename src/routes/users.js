@@ -2,13 +2,16 @@ const express = require('express');
 const bcryptjs = require('bcryptjs');
 const router = express.Router();
 const userService = require('../services/users');
-const saveRoutes = require('../utils/middlewares/saveRoutes')
+const saveRoutes = require('../utils/middlewares/saveRoutes');
+const permisions = require('../utils/middlewares/permisions')
 
-router.get('/profile/getUsers', (req, res) => {
-    userService.GetUsers((users) => {
+router.get('/profile/getUsers', saveRoutes , (req, res) => {
+    const {id} = req.decoded;
+    console.log(req.route.path)
+
+    userService.GetUser(id, (contacts) => {
         res.status(200).json({
-            data: users,
-            message: 'you have get all users'
+            contacts: contacts
         });
     });
 });
@@ -24,8 +27,8 @@ router.get('/profile/getUsers/:userId', (req, res) => {
     });
 });
 
-router.post('/profile/create', async (req, res) => {
-    const { name, lastName, username, email, tel, password } = req.body;
+router.post('/registrer', async (req, res) => {
+    const { name, lastName, username, email, tel, password, rol } = req.body;
     const hasedPassword = await bcryptjs.hash(password, 10);
     const newUser = {
         name,
@@ -33,7 +36,8 @@ router.post('/profile/create', async (req, res) => {
         username,
         email,
         tel,
-        password: hasedPassword
+        password: hasedPassword,
+        rol
     }
     
     userService.CreateUser(newUser, (userCreated) => {
@@ -43,6 +47,10 @@ router.post('/profile/create', async (req, res) => {
         });
     });
 });
+
+router.post('/profile/create', saveRoutes, permisions, (req, res) => {
+    console.log('en create');
+})
 
 router.put('profile/getUser/update/:userId', (req, res) => {
     const { userId } = req.params;
@@ -72,13 +80,29 @@ router.post('/logIn', (req, res) => {
     const { username, password } = req.body;
 
     userService.LogIn(username, password, (token, message) => {
-        req.session.token = token;
-        res.redirect('/profile');
+        if(message === 'contraseña invalida') {
+            res.status(400).json({
+                error: true,
+                message: message
+            });
+            return
+        }
+
+        if(message === 'no se encontró un usuario') {
+            res.status(400).json({
+                error: true,
+                message: message
+            });
+            return
+        }
+        if(message === 'succes') {
+            req.session.token = token;
+            res.redirect('/profile');
+        }
     });
 });
 
 router.get('/profile', saveRoutes, (req, res) => {
-    console.log(req.session.token)
     res.send(req.decoded)
 });
 

@@ -7,7 +7,8 @@ saveRoutes.use((req, res, next) => {
     const session = req.session;
 
     if(session) {
-        const token = session.token.replace('Bearer', '');
+        const token = session.token
+        console.log(token)
         jwt.verify(token, secret, (err, decoded) => {
             if(err) {
                 console.log(err);

@@ -4,13 +4,13 @@ const auth = require('../auth/authJWT');
 
 class UserServces {
     constructor() {
-        this.table = 'Persons';
+        this.table = 'persons';
         this.condiion = 'id';
     }
 
-    GetUser(id, callback) {
-        MySQL.Get(this.table, this.condiion, id, (user) => {
-            callback(user);
+    GetUser(person_id, callback) {
+        MySQL.Get('contacts', 'person_id', person_id, (contacts) => {
+            callback(contacts);
         });
     }
 
@@ -43,7 +43,13 @@ class UserServces {
         MySQL.Get(this.table, 'username', username, async (user) => {
             if(user.length) {
                 if(await bcryptjs.compare(password, user[0].password)) {
-                    auth.sign(user[0].username, (token)  => {
+
+                    const payload = {
+                        id: user[0].id.toString(),
+                        rol: user[0].rol
+                    }
+
+                    auth.sign(payload, (token)  => {
                         callback(token, 'succes');
                     });
                 } else {

@@ -11,11 +11,8 @@ const authJWT = {
             }
             callback(token);
         });
-    },
-
-    verify() {
-        
     }
+
 }
 
 module.exports = authJWT;
