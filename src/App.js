@@ -1,16 +1,12 @@
 const express = require('express');
 const helmet = require('helmet');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const { port, sessionSecret } = require('./config');
 
 const app = express();
 
 app.use(express.json());
-app.use(session({
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: false,
-}));
 
 app.use(helmet(helmet.contentSecurityPolicy({
     directives: {
@@ -18,10 +14,10 @@ app.use(helmet(helmet.contentSecurityPolicy({
         styleSrc: ["'self'", 'maxcdn.bootstrapcdn.com']
     }
 })));
+app.use(cookieParser());
 
 // ROUTES
 const userRoutes = require('./routes/users');
-const { options } = require('./routes/users');
 app.use('/', userRoutes);
 
 

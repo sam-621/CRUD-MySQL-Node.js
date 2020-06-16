@@ -3,10 +3,10 @@ const express = require('express');
 const saveRoutes = express.Router();
 
 saveRoutes.use((req, res, next) => {
-    const token = req.session.token;
+    const cookie = req.cookies;
 
-    if(token) {
-
+    if(cookie) {
+        const { token } = req.cookies;
         auth.decoded(token, (decoded) => {
             req.decoded = decoded;
             next()

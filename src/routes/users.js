@@ -6,10 +6,11 @@ const saveRoutes = require('../utils/middlewares/saveRoutes');
 const permisions = require('../utils/middlewares/permisions');
 
 router.get('/', (req, res) => {
-    res.send('Main')
+    res.send('Main');
 });
 
 router.get('/profile/getUsers', saveRoutes, permisions, (req, res) => {
+    
     const {id} = req.decoded;
 
     userService.GetUser(id, 'person_id', (contacts) => {
@@ -52,6 +53,7 @@ router.post('/registrer', async (req, res) => {
 });
 
 router.post('/profile/create', saveRoutes, permisions, (req, res) => {
+    
     const newUser = {
         name: req.body.name,
         lastName: req.body.lastName,
@@ -69,6 +71,7 @@ router.post('/profile/create', saveRoutes, permisions, (req, res) => {
 })
 
 router.put('/profile/getUser/update/:userId', saveRoutes, permisions, (req, res) => {
+    
     const { userId } = req.params;
     const user = req.body;
 
@@ -81,6 +84,7 @@ router.put('/profile/getUser/update/:userId', saveRoutes, permisions, (req, res)
 });
 
 router.delete('/profile/getUsers/delete/:userId', saveRoutes, permisions, (req, res) => {
+    
     const { userId } = req.params;
 
     userService.DeleteUser(userId, (userDeleted) => {
@@ -114,7 +118,12 @@ router.post('/logIn', (req, res) => {
         }
         if(message === 'succes') {
 
-            req.session.token = token;
+            res.cookie('token', token, {
+                // httpOnly: true,
+                // secure: true
+                // maxAge: 7200000 2horas
+                maxAge: 900000 //15min
+            });
             res.redirect('/profile');
         }
     });
